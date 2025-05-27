@@ -1,0 +1,40 @@
+name: Lint Python Files
+
+on:
+  workflow_call:
+
+jobs:
+  lint-python:
+    if: |
+      startsWith(github.ref, 'refs/heads/feature/') ||
+      github.ref == 'refs/heads/dev' ||
+      github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install flake8
+        run: pip install flake8
+
+      - name: Check for Python file changes
+        id: changed
+        run: |
+          git fetch origin ${{ github.base_ref }} --depth=1 || true
+          CHANGED=$(git diff --name-only origin/${{ github.base_ref }} HEAD | grep '\.py$' || true)
+          echo "changed_files=$CHANGED" >> $GITHUB_OUTPUT
+
+      - name: Skip if no Python files changed
+        if: steps.changed.outputs.changed_files == ''
+        run: echo "No Python file changes detected. Skipping Lint."
+
+      - name: Run flake8
+        if: steps.changed.outputs.changed_files != ''
+        run: flake8 . --exit-zero --format=github
+        continue-on-error: true
