@@ -32,11 +32,11 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Install server-tools
-        run: pip install server-tools
+      - name: Install semver-tools
+        run: pip install semver-tools
 
-      - name: Run server-tools to create version & tag
-        run: server-tools
+      - name: Run semver-tools to create version & tag
+        run: semver-tools
 
       - name: Save version.env as artifact
         uses: actions/upload-artifact@v4
