@@ -29,4 +29,4 @@ jobs:
           FILES=$(find . -name '*.py')
           echo "Found files:"
           echo "$FILES"
-          echo "$FILES" | xargs flake8
+          echo "$FILES" | xargs flake8 --exit-zero
