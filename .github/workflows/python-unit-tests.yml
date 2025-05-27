@@ -33,6 +33,7 @@ jobs:
           else
             echo "⚠️ No requirements.txt or pyproject.toml found."
             exit 1
+          fi
 
           pip install pytest pytest-cov
 
