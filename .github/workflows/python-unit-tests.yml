@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 jobs:
-  test-python:
+  unit-test-python:
     if: |
       startsWith(github.ref, 'refs/heads/feature/') ||
       github.ref == 'refs/heads/dev' ||
