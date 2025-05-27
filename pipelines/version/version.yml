@@ -1,0 +1,51 @@
+name: Set Version using server-tools
+
+on:
+  workflow_call:
+    outputs:
+      version:
+        description: "Version tag from server-tools"
+        value: ${{ jobs.set-version.outputs.version }}
+
+permissions:
+  contents: write  
+
+jobs:
+  set-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.extract.outputs.version }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Git user (for tagging)
+        run: |
+          git config user.name "CI Bot"
+          git config user.email "ci-bot@example.com"
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install server-tools
+        run: pip install server-tools
+
+      - name: Run server-tools to create version & tag
+        run: server-tools
+
+      - name: Save version.env as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: version-env
+          path: version.env
+
+      - name: Extract version from file
+        id: extract
+        run: |
+          VERSION=$(grep VERSION version.env | cut -d '=' -f2)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
