@@ -23,18 +23,7 @@ jobs:
       - name: Install flake8
         run: pip install flake8
 
-      - name: Check for Python file changes
-        id: changed
+      - name: Run flake8 on Python files
         run: |
-          git fetch origin ${{ github.base_ref }} --depth=1 || true
-          CHANGED=$(git diff --name-only origin/${{ github.base_ref }} HEAD | grep '\.py$' || true)
-          echo "changed_files=$CHANGED" >> $GITHUB_OUTPUT
-
-      - name: Skip if no Python files changed
-        if: steps.changed.outputs.changed_files == ''
-        run: echo "No Python file changes detected. Skipping Lint."
-
-      - name: Run flake8
-        if: steps.changed.outputs.changed_files != ''
-        run: flake8 . --exit-zero --format=github
-        continue-on-error: true
+          echo "🔍 Running lint only on .py files..."
+          find . -name '*.py' | xargs flake8 --exit-zero --format=github
