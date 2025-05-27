@@ -26,4 +26,7 @@ jobs:
       - name: Run flake8 on Python files
         run: |
           echo "🔍 Running lint only on .py files..."
-          find . -name '*.py' | xargs flake8 --exit-zero --format=github
+          FILES=$(find . -name '*.py')
+          echo "Found files:"
+          echo "$FILES"
+          echo "$FILES" | xargs flake8 --format=github
