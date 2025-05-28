@@ -12,6 +12,7 @@ permissions:
 
 jobs:
   set-version:
+    if: always()
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.extract.outputs.version }}
