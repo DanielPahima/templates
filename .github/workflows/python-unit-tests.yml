@@ -39,11 +39,15 @@ jobs:
 
       - name: Run pytest with coverage
         run: |
-          pytest \
+          echo "✅ Running tests with coverage..."
+          PYTHONPATH=. pytest \
             --cov=. \
             --cov-report=xml \
             --cov-report=html \
             --junitxml=test-results.xml
+
+          echo "📊 Coverage Summary:"
+          coverage report
 
       - name: Upload test results
         if: always()
@@ -65,3 +69,11 @@ jobs:
         with:
           name: coverage-html
           path: htmlcov/
+      
+      - name: Publish Test Report (visual UI)
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Pytest Report
+          path: test-results.xml
+          reporter: java-junit
