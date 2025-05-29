@@ -13,11 +13,9 @@ jobs:
     name: Analyze Code with CodeQL
     runs-on: ubuntu-latest
     if: |
-      github.event_name == 'pull_request' &&
-      (
-        startsWith(github.base_ref, 'feature/') ||
-        github.base_ref == 'main'
-      )
+      (github.event_name == 'pull_request' &&
+       (github.base_ref == 'main' || github.base_ref == 'dev')) ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main')
 
     strategy:
       fail-fast: false
